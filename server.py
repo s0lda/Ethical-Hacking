@@ -1,3 +1,7 @@
+"""
+Basic server for backdoor app.
+"""
+
 import socket
 import os
 import tqdm
