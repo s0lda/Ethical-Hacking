@@ -6,7 +6,6 @@ import socket
 import subprocess
 import psutil
 import cpuinfo
-import tqdm
 import GPUtil
 
 HOST = '127.0.0.1'
