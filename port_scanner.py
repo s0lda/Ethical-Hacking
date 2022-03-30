@@ -33,8 +33,15 @@ class PortScanner():
             pass
 
     def scan(self, port_start: int=0, port_end: int=1023) -> None:
+        """Start and End port range to scan. Start and End inclusive."""
+        progress = 0
+        port_end += 1
+        port_end = port_end if port_end > port_start else port_start
         for port in range(port_start, port_end + 1):
             self.port_Scanner(port)
+            scale = 100 / (port_end - port_start)
+            progress += scale
+            print(f'\r[{progress:.2f}%]', end='')
         print('====================================================')
         print(f'Target: {self.target}')
         print(f'IP: {self.ip}')
