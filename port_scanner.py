@@ -1,35 +1,58 @@
 import socket
 from IPy import IP
 
-target = input('Enter target to scan: ')
+class PortScanner():
+    def __init__(self, target: str):
+        self.target = target
+        self.ip = self.get_ip()
+        self.open_ports = []
 
-def find_ip(target: str) -> str:
+    def get_ip(self) -> str:
+        try:
+            IP(self.target)
+            return self.target
+        except ValueError:
+            # gethostbyname() takes only domain as argument.
+            # need get domain only from supplied url.
+            domain = self.target.replace('http://', '').replace('https://', '')
+            _domain = ''
+            for i in domain:
+                if i == '/':
+                    break
+                else:
+                    _domain += i
+            return socket.gethostbyname(_domain)
+
+    def port_Scanner(self, port: int) -> None:
+        try:
+            self.sock = socket.socket()
+            self.sock.settimeout(0.1)
+            self.sock.connect((self.ip, port))
+            self.open_ports.append(port)
+        except:
+            pass
+
+    def scan(self, port_start: int=0, port_end: int=1023) -> None:
+        for port in range(port_start, port_end + 1):
+            self.port_Scanner(port)
+        print('====================================================')
+        print(f'Target: {self.target}')
+        print(f'IP: {self.ip}')
+        self.open_ports = str(self.open_ports).replace('[', '').replace(']', '').replace(' ', '')
+        print(f'Open ports: {self.open_ports}')
+
+            
+def main() -> None:
+    target = input('Enter target to scan: ')
     try:
-        IP(target)
-        return target
+        start_port = int(input('Enter start port: '))
     except ValueError:
-        # gethostbyname() takes only domain as argument.
-        # need get domain only from supplied url.
-        domain = target.replace('http://', '').replace('https://', '')
-        _domain = ''
-        for i in domain:
-            if i == '/':
-                break
-            else:
-                _domain += i
-        return socket.gethostbyname(_domain)
-
-def port_Scanner(ip: str, port: int) -> None:
-    port += 1
+        start_port = 0
     try:
-        sock = socket.socket()
-        sock.settimeout(0.1)
-        sock.connect((ip, port))
-        print(f'Port {port} is open.')
-    except:
-        print(f'Port {port} is closed.')
+        end_port = int(input('Enter end port: '))
+    except ValueError:
+        end_port = 1023
+    PortScanner(target).scan(start_port, end_port)
 
-ip = find_ip(target)
-
-for port in range(0, 1023):
-    scanner = port_Scanner(ip, port)
+if __name__ == '__main__':
+    main()
