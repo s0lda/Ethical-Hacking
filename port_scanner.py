@@ -21,31 +21,36 @@ class PortScanner():
                     break
                 else:
                     _domain += i
-            return socket.gethostbyname(_domain)
+            try:
+                return socket.gethostbyname(_domain)
+            except socket.gaierror:
+                print('Invalid domain name.')
+                exit()
 
     def port_Scanner(self, port: int) -> None:
         try:
             self.sock = socket.socket()
             self.sock.settimeout(0.1)
             self.sock.connect((self.ip, port))
-            self.open_ports.append(port)
+            self.open_ports.append(port) # type: ignore
         except:
             pass
 
-    def scan(self, start_port: int=0, end_port: int=1023) -> None:
-        """Range of ports to scan. Start and end ports are inclusive."""
+    def scan(self, port_start: int=0, port_end: int=1023) -> None:
+        """Start and End port range to scan. Start and End inclusive."""
         progress = 0
-        end_port = end_port if end_port > start_port else start_port
-        scale = 100 / (end_port - start_port + 1)
-        for port in range(start_port, end_port + 1):
-            progress += scale
+        port_end += 1
+        port_end = port_end if port_end > port_start else port_start
+        for port in range(port_start, port_end + 1):
             self.port_Scanner(port)
+            scale = 100 / (port_end - port_start)
+            progress += scale
             print(f'\r[{progress:.2f}%]', end='')
-        print('\n====================================================')
+        print('====================================================')
         print(f'Target: {self.target}')
         print(f'IP: {self.ip}')
-        self.open_ports = str(self.open_ports).replace('[', '').replace(']', '')
-        print(f'Open ports: {self.open_ports}')
+        self.open_ports = str(self.open_ports).replace('[', '').replace(']', '') # type: ignore
+        print(f'Open ports: {self.open_ports}') # type: ignore
 
             
 def main() -> None:
