@@ -44,7 +44,7 @@ class PortScanner():
         print('\n====================================================')
         print(f'Target: {self.target}')
         print(f'IP: {self.ip}')
-        self.open_ports = str(self.open_ports).replace('[', '').replace(']', '').replace(' ', '')
+        self.open_ports = str(self.open_ports).replace('[', '').replace(']', '')
         print(f'Open ports: {self.open_ports}')
 
             
