@@ -21,14 +21,18 @@ class PortScanner():
                     break
                 else:
                     _domain += i
-            return socket.gethostbyname(_domain)
+            try:
+                return socket.gethostbyname(_domain)
+            except socket.gaierror:
+                print('Invalid domain name.')
+                exit()
 
     def port_Scanner(self, port: int) -> None:
         try:
             self.sock = socket.socket()
             self.sock.settimeout(0.1)
             self.sock.connect((self.ip, port))
-            self.open_ports.append(port)
+            self.open_ports.append(port) # type: ignore
         except:
             pass
 
@@ -45,8 +49,8 @@ class PortScanner():
         print('====================================================')
         print(f'Target: {self.target}')
         print(f'IP: {self.ip}')
-        self.open_ports = str(self.open_ports).replace('[', '').replace(']', '').replace(' ', '')
-        print(f'Open ports: {self.open_ports}')
+        self.open_ports = str(self.open_ports).replace('[', '').replace(']', '') # type: ignore
+        print(f'Open ports: {self.open_ports}') # type: ignore
 
             
 def main() -> None:
