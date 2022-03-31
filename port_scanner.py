@@ -32,11 +32,12 @@ class PortScanner():
         except:
             pass
 
-    def scan(self, port_start: int=0, port_end: int=1023) -> None:
+    def scan(self, start_port: int=0, end_port: int=1023) -> None:
         """Range of ports to scan. Start and end ports are inclusive."""
         progress = 0
-        scale = 100 / (port_end - port_start + 1)
-        for port in range(port_start, port_end + 1):
+        end_port = end_port if end_port > start_port else start_port
+        scale = 100 / (end_port - start_port + 1)
+        for port in range(start_port, end_port + 1):
             progress += scale
             self.port_Scanner(port)
             print(f'\r[{progress:.2f}%]', end='')
