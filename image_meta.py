@@ -29,7 +29,7 @@ class ImageMeta():
         else:
             print('>> File does not exist.')
     
-    def remove_meta(self, save_path: str) -> None:
+    def remove_meta(self, save_path: str=f'{os.path.dirname(__file__)}') -> None:
         if os.path.isfile(self.file):
             self.image.save(f'{save_path}\\NoMeta-{os.path.basename(self.file)}')
             print('>> Meta data removed.')
