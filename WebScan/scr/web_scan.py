@@ -4,10 +4,9 @@ from kivy.core.window import Window
 from scr.screen_size import get_screen_size
 from scr.port_scanner import PortScanner
 from scr.domain_lookup import DomainLookUp
-from kivy.clock import Clock
+
 
 class WebScan(RelativeLayout):
-    progress: float = 0
     
     def reset_progress_bar(self) -> None:
         self.ids.progress_bar.value = 0
@@ -38,19 +37,14 @@ class WebScan(RelativeLayout):
         self.ids.progress_bar.max = int(e_port)
         self.ids.progress_bar.min = int(s_port)
         self.ids.progress_bar.value = int(s_port)
-        self.progress = int(s_port)
         self.ids.info_label.text = f' PORTS {s_port}-{e_port}\n OPEN PORTS:\n'
         
         scanner = PortScanner(ip)
         for port in range(int(s_port), int(e_port) + 1):
-            self.progress += 1
+            self.ids.progress_bar.value += 1
             open_port = scanner.scan_port(port)
             if open_port:
                 self.ids.info_label.text = f'{self.ids.info_label.text} {port} '
-    
-    def update_progres_bar(self, *args) -> None:
-        self.ids.progress_bar.value = 2
-        
 
 class Application(MDApp):
     title = 'Web Scanner'
@@ -59,5 +53,4 @@ class Application(MDApp):
     def build(self) -> RelativeLayout:
         if get_screen_size != None:
             Window.size = (400, 500)
-        Clock.schedule_interval(WebScan.update_progres_bar, 0.1)
         return WebScan()
