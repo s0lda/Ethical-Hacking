@@ -53,15 +53,13 @@
         text_color: 1, 1, 1, 1
         line_color: 1, 1, 1, 1
         on_release: root.port_scan(search_input.text, start_port.text, end_port.text)
-    Slider:
+    ProgressBar:
         id: progress_bar
-        min: 0
-        max: 0
-        step: 1
+        max: 100
         value: 0
         orientation: 'horizontal'
-        size_hint: 0.99, 0.05
-        pos_hint: {'x': 0.001, 'y': 0.03}
+        size_hint: 0.98, 0.05
+        pos_hint: {'x': 0.01, 'y': 0.03}
         cursor_size: 0, 0
         value_track: True
         value_track_color: (1, 0, 0, 1)
