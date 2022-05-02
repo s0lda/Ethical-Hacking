@@ -1,0 +1,88 @@
+<WebScan>:
+    canvas:
+        Color:
+            rgba: 51/255, 51/255, 51/255, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    MDTextFieldRound:
+        id: search_input
+        size_hint: 0.9, 0.05
+        pos_hint: {'x': 0.05, 'y': 0.93}
+        hint_text: 'url or ip'
+        halign: 'center'
+        multiline: False
+        normal_color: 196/255, 196/255, 196/255, 1
+        color_active: 196/255, 196/255, 196/255, 1
+        line_color: 1, 1, 1, 1
+    MDTextFieldRound:
+        id: start_port
+        size_hint: 0.25, 0.05
+        pos_hint: {'x': 0.2, 'y': 0.87}
+        text: ''
+        hint_text: 'Start Port'
+        halign: 'center'
+        multiline: False
+        normal_color: 196/255, 196/255, 196/255, 1
+        color_active: 196/255, 196/255, 196/255, 1
+        line_color: 1, 1, 1, 1
+        input_filter: 'int'
+    MDTextFieldRound:
+        id: end_port
+        size_hint: 0.25, 0.05
+        pos_hint: {'x': 0.55, 'y': 0.87}
+        text: ''
+        hint_text: 'End Port'
+        halign: 'center'
+        multiline: False
+        normal_color: 196/255, 196/255, 196/255, 1
+        color_active: 196/255, 196/255, 196/255, 1
+        line_color: 1, 1, 1, 1
+        input_filter: 'int'
+    MDFillRoundFlatButton:  
+        text: 'Domain Lookup'
+        size_hint: 0.4, 0.05
+        pos_hint: {'x': 0.05, 'y': 0.8}
+        text_color: 1, 1, 1, 1
+        line_color: 1, 1, 1, 1
+        on_release: root.check_domain(search_input.text)
+    MDFillRoundFlatButton:
+        text: 'Scan Port'
+        size_hint: 0.4, 0.05
+        pos_hint: {'x': 0.55, 'y': 0.8}
+        text_color: 1, 1, 1, 1
+        line_color: 1, 1, 1, 1
+        on_release: root.port_scan(search_input.text, start_port.text, end_port.text)
+    Slider:
+        id: progress_bar
+        min: 0
+        max: 0
+        step: 1
+        value: 0
+        orientation: 'horizontal'
+        size_hint: 0.99, 0.05
+        pos_hint: {'x': 0.001, 'y': 0.03}
+        cursor_size: 0, 0
+        value_track: True
+        value_track_color: (1, 0, 0, 1)
+        value_track_width: 4
+        opacity: 0
+    ScrollView:
+        size_hint: 0.9, 0.65
+        pos_hint: {'x': 0.05, 'y': 0.1}
+        canvas.before:
+            Color:
+                rgba: 196/255, 196/255, 196/255, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+        Label:
+            id: info_label
+            size_hint: 1, 1
+            size_hint_y: None
+            text_size: self.width, None
+            height: self.texture_size[1]
+            halign: 'left'
+            valign: 'top'
+            color: 0, 0, 0, 1
+            multiline: True
